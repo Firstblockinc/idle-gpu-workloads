@@ -1,0 +1,1 @@
+nicehash_idle_image = "dockerhubnh/nicehash:latest"
