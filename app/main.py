@@ -20,7 +20,7 @@ def scan():
 
     multiple_processes_list = gpu_manager.get_gpus_with_multiple_processes("172.17.0.185", "unix", "password")
     if (len(multiple_processes_list) > 0):
-            running_nicehash_containers = docker_manager.get_running_containers() #all the running containers on nicehash image only
+            running_nicehash_containers = docker_manager.get_nicehash_running_containers() #all the running containers on nicehash image only
             docker_manager.stop_container(running_nicehash_containers)
             docker_manager.remove_container(running_nicehash_containers)
 
