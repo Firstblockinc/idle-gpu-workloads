@@ -52,7 +52,7 @@ class DockerManager:
             print(f"Error removing container: {e}")
 
 
-    def get_running_containers(self, image="dockerhubnh/nicehash:latest"):
+    def get_nicehash_running_containers(self, image="dockerhubnh/nicehash:latest"):
         try:
             containers = self.client.containers.list()
             # Filter containers by the specified image tag
