@@ -15,14 +15,13 @@ class GPUManager:
         command = "nvidia-smi --query-compute-apps=gpu_uuid --format=csv,noheader,nounits"  # Check for any processes running
         try:
             output = execute_ssh_command(host, username, password, command)
+            command_list_uuid = "nvidia-smi --query-gpu=gpu_uuid --format=csv,noheader,nounits"  # Get the GPU UUIDs
+            all_gpus_output = execute_ssh_command(host, username, password, command_list_uuid)
+            
             if not output.strip():  # If output is empty, no processes are running
-                command_list_uuid = "nvidia-smi --query-gpu=gpu_uuid --format=csv,noheader,nounits"  # Get the GPU UUIDs
-                all_gpus_output = execute_ssh_command(host, username, password, command_list_uuid)
                 return all_gpus_output.strip().split('\n')
             
             running_gpu_uuids = set(output.strip().split('\n'))
-            command_list_uuid = "nvidia-smi --query-gpu=gpu_uuid --format=csv,noheader,nounits"  # Get the GPU UUIDs
-            all_gpus_output = execute_ssh_command(host, username, password, command_list_uuid)
             all_gpu_uuids = all_gpus_output.strip().split('\n')
             
             idle_gpus = []
