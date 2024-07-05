@@ -4,7 +4,8 @@ import docker
 class DockerManager:
     def __init__(self, image, environment=None):
 
-        self.client = docker.from_env()
+        base_url = f"tcp://172.17.0.185:2375"  # Default Docker remote API port
+        self.client = docker.DockerClient(base_url=base_url)
         self.image = image
         self.environment = environment if environment is not None else {}
 
@@ -40,6 +41,17 @@ class DockerManager:
             print(f"Container not found: {e}")
         except docker.errors.APIError as e:
             print(f"Error removing container: {e}")
+
+
+    def get_running_containers(self):
+        try:
+            containers = self.client.containers.list()
+            container_ids = [container.id for container in containers]
+            return container_ids
+        except docker.errors.APIError as e:
+            print(f"Error listing containers: {e}")
+            return []
+
 
 
 
