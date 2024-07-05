@@ -22,21 +22,29 @@ class DockerManager:
             print(f"Error running container: {e}")
             return None
 
-    def stop_container(self, container_id):
+    def stop_container(self, container_ids):
         try:
-            container = self.client.containers.get(container_id)
-            container.stop()
-            print(f"Container {container_id} stopped.")
+            if container_ids:
+                for id in container_ids:
+                    container = self.client.containers.get(id)
+                    container.stop()
+                    print(f"CONTAINER {container_ids} STOPPED.")
+                else:
+                    print("No containers running")
         except docker.errors.NotFound as e:
             print(f"Container not found: {e}")
         except docker.errors.APIError as e:
             print(f"Error stopping container: {e}")
 
-    def remove_container(self, container_id):
+    def remove_container(self, container_ids):
         try:
-            container = self.client.containers.get(container_id)
-            container.remove()
-            print(f"Container {container_id} removed.")
+            if container_ids:
+                for id in container_ids:
+                    container = self.client.containers.get(id)
+                    container.remove()
+                print(f"CONTAINER {container_ids} REMOVED.")
+            else:
+                print("No containers running")
         except docker.errors.NotFound as e:
             print(f"Container not found: {e}")
         except docker.errors.APIError as e:
