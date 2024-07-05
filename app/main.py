@@ -2,6 +2,7 @@ from services.gpus.gpu_manager import GPUManager
 from services.containers.docker_manager import DockerManager
 from config.docker.images import nicehash_idle_image
 from utils.network import get_local_ip
+import time
 
 def scan():
     gpu_manager = GPUManager()
@@ -24,7 +25,10 @@ def scan():
             docker_manager.remove_container(running_nicehash_containers)
 
 if __name__ == "__main__":
-    scan()
+    while True:
+     print("Running idle check")
+     scan()
+     time.sleep(20)
 
 
 
