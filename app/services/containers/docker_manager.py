@@ -4,6 +4,7 @@ import docker
 class DockerManager:
     def __init__(self, image, environment=None):
 
+        #must be changed to local
         base_url = f"tcp://172.17.0.185:2375"  # Default Docker remote API port
         self.client = docker.DockerClient(base_url=base_url)
         self.image = image
@@ -51,9 +52,11 @@ class DockerManager:
             print(f"Error removing container: {e}")
 
 
-    def get_running_containers(self):
+    def get_running_containers(self, image="dockerhubnh/nicehash:latest"):
         try:
             containers = self.client.containers.list()
+            # Filter containers by the specified image tag
+            containers = [container for container in containers if any(tag == image for tag in container.image.tags)]
             container_ids = [container.id for container in containers]
             return container_ids
         except docker.errors.APIError as e:
