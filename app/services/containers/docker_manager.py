@@ -4,7 +4,6 @@ import docker
 class DockerManager:
     def __init__(self, image, environment=None):
 
-        #must be changed to local
         base_url = "unix://var/run/docker.sock"
         self.client = docker.DockerClient(base_url=base_url)
         self.image = image
