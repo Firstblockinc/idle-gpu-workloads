@@ -5,7 +5,7 @@ class DockerManager:
     def __init__(self, image, environment=None):
 
         #must be changed to local
-        base_url = f"tcp://172.17.0.185:2375"  # Default Docker remote API port
+        base_url = "unix://var/run/docker.sock"
         self.client = docker.DockerClient(base_url=base_url)
         self.image = image
         self.environment = environment if environment is not None else {}
