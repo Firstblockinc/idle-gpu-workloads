@@ -3,10 +3,13 @@ from services.containers.docker_manager import DockerManager
 from config.docker.images import nicehash_idle_image
 from utils.network import get_local_ip
 import time
+import logging
 
 ip_address = get_local_ip()
 
 def scan():
+    print(f"Scanning...")
+    logging("Scanning, Logging...")
     gpu_manager = GPUManager()
     uuids = gpu_manager.get_idle_gpus(ip_address, "unix", "password")
     string_of_uuids = ', '.join(uuids)
