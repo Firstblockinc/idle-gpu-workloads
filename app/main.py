@@ -12,7 +12,8 @@ def scan():
     gpu_manager = GPUManager()
     uuids = gpu_manager.get_idle_gpus(ip_address, "unix", "password")
     string_of_uuids = ', '.join(uuids)
-    logging.info(f"{len(uuids)} found")
+    logging.info(f"{len(uuids)} idle gpus found")
+    logging.info(f"(uuids : {uuids}")
     environment={
         "MINING_ADDRESS": "NHbEoHxbUrsQmGxA9mbtDVTkKWDxwvCQa936",
         "MINING_WORKER_NAME": f"rig-{get_local_ip()}",
