@@ -15,7 +15,7 @@ def scan():
     logging.info(f" {len(uuids)} idle gpus found")
     logging.info(f"(uuids : {uuids})")
     environment={
-        "MINING_ADDRESS": "NHbEoHxbUrsQmGxA9mbtDVTkKWDxwvCQa936",
+        "MINING_ADDRESS": "NHbJiYLcrpDRR3GWwQazRJ7qbishXKi66md1",
         "MINING_WORKER_NAME": f"rig-{get_local_ip()}",
         "NVIDIA_VISIBLE_DEVICES": string_of_uuids,
     }
