@@ -9,7 +9,7 @@ ip_address = get_local_ip()
 
 def scan():
     print(f"Scanning...")
-    logging("Scanning, Logging...")
+    logging.info("Scanning, Logging...")
     gpu_manager = GPUManager()
     uuids = gpu_manager.get_idle_gpus(ip_address, "unix", "password")
     string_of_uuids = ', '.join(uuids)
@@ -34,6 +34,7 @@ def scan():
 if __name__ == "__main__":
     while True:
      print(f"Running idle check on ip : {ip_address}")
+     logging.info("Running idle check")
      scan()
      time.sleep(20)
 
