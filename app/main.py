@@ -9,8 +9,6 @@ ip_address = get_local_ip()
 logging.basicConfig(level=logging.INFO)
 
 def scan():
-    print(f"Scanning...")
-    logging.info("Scanning, Logging...")
     gpu_manager = GPUManager()
     uuids = gpu_manager.get_idle_gpus(ip_address, "unix", "password")
     string_of_uuids = ', '.join(uuids)
@@ -22,11 +20,11 @@ def scan():
     print(f"Idle uuids : {uuids}")
     docker_manager = DockerManager(nicehash_idle_image, environment=environment)
     if(len(uuids) > 0):
-        print("Running new container")
+        logging.info("Running new container")
         docker_manager.run_container()
 
     multiple_processes_list = gpu_manager.get_gpus_with_multiple_processes(ip_address, "unix", "password")
-    print(f"Multiple process gpu : {multiple_processes_list}")
+    logging.info(f"Multiple process gpu : {multiple_processes_list}")
     if (len(multiple_processes_list) > 0):
             running_nicehash_containers = docker_manager.get_nicehash_running_containers() #all the running containers on nicehash image only
             docker_manager.stop_container(running_nicehash_containers)
@@ -34,8 +32,7 @@ def scan():
 
 if __name__ == "__main__":
     while True:
-     print(f"Running idle check on ip : {ip_address}")
-     logging.info("Running idle check")
+     logging.info(f"Running idle check on ip : {ip_address}")
      scan()
      time.sleep(20)
 

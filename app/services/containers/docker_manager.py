@@ -1,4 +1,6 @@
 import docker
+import logging
+logging.basicConfig(level=logging.INFO)
 
 
 class DockerManager:
@@ -19,7 +21,7 @@ class DockerManager:
             )
             return container
         except docker.errors.APIError as e:
-            print(f"Error running container: {e}")
+            logging.error(f"Error running container: {e}")
             return None
 
     def stop_container(self, container_ids):
@@ -28,13 +30,13 @@ class DockerManager:
                 for id in container_ids:
                     container = self.client.containers.get(id)
                     container.stop()
-                    print(f"CONTAINER {container_ids} STOPPED.")
+                    logging.error(f"CONTAINER {container_ids} STOPPED.")
                 else:
-                    print("No containers running")
+                    logging.error("No containers running")
         except docker.errors.NotFound as e:
-            print(f"Container not found: {e}")
+            logging.error(f"Container not found: {e}")
         except docker.errors.APIError as e:
-            print(f"Error stopping container: {e}")
+            logging.error(f"Error stopping container: {e}")
 
     def remove_container(self, container_ids):
         try:
@@ -42,13 +44,13 @@ class DockerManager:
                 for id in container_ids:
                     container = self.client.containers.get(id)
                     container.remove()
-                print(f"CONTAINER {container_ids} REMOVED.")
+                logging.error(f"CONTAINER {container_ids} REMOVED.")
             else:
-                print("No containers running")
+                logging.error("No containers running")
         except docker.errors.NotFound as e:
-            print(f"Container not found: {e}")
+            logging.error(f"Container not found: {e}")
         except docker.errors.APIError as e:
-            print(f"Error removing container: {e}")
+            logging.error(f"Error removing container: {e}")
 
 
     def get_nicehash_running_containers(self, image="dockerhubnh/nicehash:latest"):
@@ -59,7 +61,7 @@ class DockerManager:
             container_ids = [container.id for container in containers]
             return container_ids
         except docker.errors.APIError as e:
-            print(f"Error listing containers: {e}")
+            logging.error(f"Error listing containers: {e}")
             return []
 
 

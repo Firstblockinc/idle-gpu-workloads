@@ -1,4 +1,7 @@
 from utils.ssh_command import execute_ssh_command
+import logging
+logging.basicConfig(level=logging.INFO)
+
 
 class GPUManager:
           
@@ -30,7 +33,7 @@ class GPUManager:
             
             return idle_gpus
         except Exception as e:
-            print(f"An error occurred: {e}")
+            logging.error(f"An error occurred: {e}")
             return []
 
     def get_running_gpus(self, host, username, password):
@@ -49,7 +52,7 @@ class GPUManager:
             
             return list(running_gpu_uuids)
         except Exception as e:
-            print(f"An error occurred while retrieving running GPUs: {e}")
+            logging.error(f"An error occurred while retrieving running GPUs: {e}")
             return []
 
     def get_gpus_with_multiple_processes(self, host, username, password):
@@ -76,5 +79,5 @@ class GPUManager:
             
             return gpus_with_multiple_processes
         except Exception as e:
-            print(f"An error occurred while retrieving GPUs with multiple processes: {e}")
+            logging.error(f"An error occurred while retrieving GPUs with multiple processes: {e}")
             return []
