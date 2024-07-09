@@ -30,9 +30,9 @@ class DockerManager:
                 for id in container_ids:
                     container = self.client.containers.get(id)
                     container.stop()
-                    logging.error(f"CONTAINER {container_ids} STOPPED.")
+                    logging.info(f"CONTAINER {container_ids} STOPPED.")
                 else:
-                    logging.error("No containers running")
+                    logging.info("No containers running")
         except docker.errors.NotFound as e:
             logging.error(f"Container not found: {e}")
         except docker.errors.APIError as e:
@@ -44,9 +44,9 @@ class DockerManager:
                 for id in container_ids:
                     container = self.client.containers.get(id)
                     container.remove()
-                logging.error(f"CONTAINER {container_ids} REMOVED.")
+                logging.info(f"CONTAINER {container_ids} REMOVED.")
             else:
-                logging.error("No containers running")
+                logging.info("No containers running")
         except docker.errors.NotFound as e:
             logging.error(f"Container not found: {e}")
         except docker.errors.APIError as e:
