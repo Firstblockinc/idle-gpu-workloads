@@ -15,12 +15,14 @@ def scan():
         "MINING_WORKER_NAME": f"rig-{get_local_ip()}",
         "NVIDIA_VISIBLE_DEVICES": string_of_uuids,
     }
-
+    print(f"Idle uuids : {uuids}")
     docker_manager = DockerManager(nicehash_idle_image, environment=environment)
     if(len(uuids) > 0):
+        print("Running new container")
         docker_manager.run_container()
 
     multiple_processes_list = gpu_manager.get_gpus_with_multiple_processes(ip_address, "unix", "password")
+    print(f"Multiple process gpu : {multiple_processes_list}")
     if (len(multiple_processes_list) > 0):
             running_nicehash_containers = docker_manager.get_nicehash_running_containers() #all the running containers on nicehash image only
             docker_manager.stop_container(running_nicehash_containers)
