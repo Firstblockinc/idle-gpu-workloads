@@ -6,6 +6,7 @@ import time
 import logging
 
 ip_address = get_local_ip()
+logging.basicConfig(level=logging.INFO)
 
 def scan():
     print(f"Scanning...")
