@@ -1,5 +1,4 @@
 from utils.ssh_command import execute_ssh_command
-import pynvml
 
 class GPUManager:
           
@@ -50,25 +49,6 @@ class GPUManager:
             
             return list(running_gpu_uuids)
         except Exception as e:
-            print(f"An error occurred while retrieving running GPUs: {e}")
-            return []
-        
-    def get_running_gpus_nvml(self, host, username, password):
-        try:
-            pynvml.nvmlInit()
-
-            device_count = pynvml.nvmlDeviceGetCount()
-            running_gpus = []
-            
-            for i in range(device_count):
-                handle = pynvml.nvmlDeviceGetHandleByIndex(i)
-                processes = pynvml.nvmlDeviceGetComputeRunningProcesses(handle)
-                if processes:  # If there are processes running on the GPU
-                    gpu_uuid = pynvml.nvmlDeviceGetUUID(handle)
-                    running_gpus.append(gpu_uuid)
-            pynvml.nvmlShutdown()
-            return running_gpus
-        except pynvml.NVMLError as e:
             print(f"An error occurred while retrieving running GPUs: {e}")
             return []
 
