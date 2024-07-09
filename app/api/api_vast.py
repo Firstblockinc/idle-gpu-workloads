@@ -1,4 +1,4 @@
-from app.config.vast.vast_config import HEADERS
+from config.vast.vast_config import HEADERS
 import json
 import requests
 
