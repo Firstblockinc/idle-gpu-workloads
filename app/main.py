@@ -23,7 +23,8 @@ def scan():
     docker_manager = DockerManager(nicehash_idle_image, environment=environment)
     if(len(uuids) > 0):
         logging.info("Running new container")
-        docker_manager.run_container()
+        container = docker_manager.run_container()
+        logging.info(container)
 
     multiple_processes_list = gpu_manager.get_gpus_with_multiple_processes(ip_address, "unix", "password")
     logging.info(f"Multiple process gpu : {multiple_processes_list}")
