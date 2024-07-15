@@ -18,7 +18,7 @@ def scan():
     logging.info(f"(uuids : {uuids})")
     environment={
         "MINING_ADDRESS": "NHbP3AQgHwLAbP266U2UKcppmgTK2ouUCLkV",
-        "MINING_WORKER_NAME": f"rig-{get_local_ip()}",
+        "MINING_WORKER_NAME": f"AI-Rig-{get_local_ip()}",
         "NVIDIA_VISIBLE_DEVICES": string_of_uuids,
     }
     print(f"Idle uuids : {uuids}")
