@@ -2,6 +2,8 @@ from services.gpus.gpu_manager import GPUManager
 from services.containers.docker_manager import DockerManager
 from config.docker.images import nicehash_idle_image
 from utils.network import get_local_ip
+from config.mining_addresses import gez_nicehash_address
+from config.nicehash.nicehash_config import make_signed_request
 import time
 import logging
 
@@ -15,7 +17,7 @@ def scan():
     logging.info(f" {len(uuids)} idle gpus found")
     logging.info(f"(uuids : {uuids})")
     environment={
-        "MINING_ADDRESS": "NHbJiYLcrpDRR3GWwQazRJ7qbishXKi66md1",
+        "MINING_ADDRESS": gez_nicehash_address,
         "MINING_WORKER_NAME": f"rig-{get_local_ip()}",
         "NVIDIA_VISIBLE_DEVICES": string_of_uuids,
     }
@@ -34,10 +36,15 @@ def scan():
             docker_manager.remove_container(running_nicehash_containers)
 
 if __name__ == "__main__":
+    first_run = True
     while True:
-     logging.info(f"Running idle check on ip : {ip_address}")
-     scan()
-     time.sleep(20)
-
-
+        if first_run:
+            logging.info(f"Running idle check on ip : {ip_address} after initial delay")
+            scan()
+            time.sleep(720)  # Sleep for 12 minutes
+            first_run = False
+        else:
+            logging.info(f"Running idle check on ip : {ip_address}")
+            scan()
+            time.sleep(30)  # Sleep for 20 seconds
 
