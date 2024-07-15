@@ -2,8 +2,8 @@ from services.gpus.gpu_manager import GPUManager
 from services.containers.docker_manager import DockerManager
 from config.docker.images import nicehash_idle_image
 from utils.network import get_local_ip
-from config.mining_addresses import gez_nicehash_address
-from config.nicehash.nicehash_config import make_signed_request
+#from config.mining_addresses import gez_nicehash_address
+#from config.nicehash.nicehash_config import make_signed_request
 import time
 import logging
 
