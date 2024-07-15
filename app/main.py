@@ -25,6 +25,7 @@ def scan():
     print(f"Idle uuids : {uuids}")
     docker_manager = DockerManager(nicehash_idle_image, environment=environment)
     if(len(uuids) > 0):
+        first_run = True
         logging.info("Running new container")
         container = docker_manager.run_container()
         logging.info(container)
