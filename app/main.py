@@ -2,8 +2,6 @@ from services.gpus.gpu_manager import GPUManager
 from services.containers.docker_manager import DockerManager
 from config.docker.images import nicehash_idle_image
 from utils.network import get_local_ip
-#from config.mining_addresses import gez_nicehash_address
-#from config.nicehash.nicehash_config import make_signed_request
 import time
 import logging
 
@@ -11,42 +9,50 @@ ip_address = get_local_ip()
 last_three_chars = ip_address[-3:]
 logging.basicConfig(level=logging.INFO)
 
+# Initialize the flag and timing variables
+first_run = True
+scan_interval = 720  # 12 minutes in seconds
+short_interval = 30  # 30 seconds
+time_to_sleep = scan_interval
+
 def scan():
+    global first_run, time_to_sleep
+    
     gpu_manager = GPUManager()
     uuids = gpu_manager.get_idle_gpus(ip_address, "unix", "password")
     string_of_uuids = ', '.join(uuids)
-    logging.info(f" {len(uuids)} idle gpus found")
-    logging.info(f"(uuids : {uuids})")
-    environment={
+    logging.info(f"{len(uuids)} idle GPUs found")
+    logging.info(f"(UUIDs: {uuids})")
+    environment = {
         "MINING_ADDRESS": "NHbP3AQgHwLAbP266U2UKcppmgTK2ouUCLkV",
         "MINING_WORKER_NAME": f"AI-Rig-{last_three_chars}",
         "NVIDIA_VISIBLE_DEVICES": string_of_uuids,
     }
-    print(f"Idle uuids : {uuids}")
+    print(f"Idle UUIDs: {uuids}")
     docker_manager = DockerManager(nicehash_idle_image, environment=environment)
-    if(len(uuids) > 0):
-        first_run = True
+    
+    if len(uuids) > 0:
         logging.info("Running new container")
         container = docker_manager.run_container()
         logging.info(container)
+        # Reset timing to 12 minutes
+        time_to_sleep = scan_interval
+        first_run = True
 
     multiple_processes_list = gpu_manager.get_gpus_with_multiple_processes(ip_address, "unix", "password")
-    logging.info(f"Multiple process gpu : {multiple_processes_list}")
-    if (len(multiple_processes_list) > 0):
-            running_nicehash_containers = docker_manager.get_nicehash_running_containers() #all the running containers on nicehash image only
-            docker_manager.stop_container(running_nicehash_containers)
-            docker_manager.remove_container(running_nicehash_containers)
+    logging.info(f"Multiple process GPUs: {multiple_processes_list}")
+    if len(multiple_processes_list) > 0:
+        running_nicehash_containers = docker_manager.get_nicehash_running_containers()  # All the running containers on NiceHash image only
+        docker_manager.stop_container(running_nicehash_containers)
+        docker_manager.remove_container(running_nicehash_containers)
+
+    # If it's not the first run, set the scan interval to 30 seconds
+    if not first_run:
+        time_to_sleep = short_interval
+
+    logging.info(f"Sleeping for {time_to_sleep} seconds")
+    time.sleep(time_to_sleep)
 
 if __name__ == "__main__":
-    first_run = True
     while True:
-        if first_run:
-            logging.info(f"Running idle check on ip : {ip_address} after initial delay")
-            scan()
-            time.sleep(720)  # Sleep for 12 minutes
-            first_run = False
-        else:
-            logging.info(f"Running idle check on ip : {ip_address}")
-            scan()
-            time.sleep(30)  # Sleep for 20 seconds
-
+        scan()
