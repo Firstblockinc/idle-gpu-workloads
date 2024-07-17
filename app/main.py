@@ -13,7 +13,7 @@ logging.basicConfig(level=logging.INFO)
 # Initialize the timing variables
 scan_interval = 720  # 12 minutes in seconds
 short_interval = 30  # 30 seconds
-multiple_process_check_interval = 20  # 20 seconds
+multiple_process_check_interval = 8  # 20 seconds
 
 def scan():
     while True:
