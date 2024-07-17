@@ -12,9 +12,11 @@ logging.basicConfig(level=logging.INFO)
 # Initialize the timing variables
 scan_interval = 720  # 12 minutes in seconds
 short_interval = 30  # 30 seconds
+multiple_process_check_interval = 20  # 20 seconds
+last_multiple_process_check_time = time.time()
 
 def scan():
-    global scan_interval
+    global scan_interval, short_interval, multiple_process_check_interval, last_multiple_process_check_time
     
     gpu_manager = GPUManager()
     uuids = gpu_manager.get_idle_gpus(ip_address, "unix", "password")
@@ -39,12 +41,15 @@ def scan():
         # Set timing to 30 seconds if no idle GPUs are detected
         time_to_sleep = short_interval
 
-    multiple_processes_list = gpu_manager.get_gpus_with_multiple_processes(ip_address, "unix", "password")
-    logging.info(f"Multiple process GPUs: {multiple_processes_list}")
-    if len(multiple_processes_list) > 0:
-        running_nicehash_containers = docker_manager.get_nicehash_running_containers()  # All the running containers on NiceHash image only
-        docker_manager.stop_container(running_nicehash_containers)
-        docker_manager.remove_container(running_nicehash_containers)
+    current_time = time.time()
+    if current_time - last_multiple_process_check_time >= multiple_process_check_interval:
+        multiple_processes_list = gpu_manager.get_gpus_with_multiple_processes(ip_address, "unix", "password")
+        logging.info(f"Multiple process GPUs: {multiple_processes_list}")
+        if len(multiple_processes_list) > 0:
+            running_nicehash_containers = docker_manager.get_nicehash_running_containers()  # All the running containers on NiceHash image only
+            docker_manager.stop_container(running_nicehash_containers)
+            docker_manager.remove_container(running_nicehash_containers)
+        last_multiple_process_check_time = current_time
 
     logging.info(f"Sleeping for {time_to_sleep} seconds")
     time.sleep(time_to_sleep)
