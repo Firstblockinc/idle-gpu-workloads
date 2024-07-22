@@ -10,10 +10,9 @@ ip_address = get_local_ip()
 last_three_chars = ip_address[-3:]
 logging.basicConfig(level=logging.INFO)
 
-# Initialize the timing variables
-scan_interval = 720  # 12 minutes in seconds
-short_interval = 30  # 30 seconds
-multiple_process_check_interval = 8  # 20 seconds
+scan_interval = 720  
+short_interval = 30 
+multiple_process_check_interval = 8 
 
 def scan():
     while True:
@@ -34,10 +33,9 @@ def scan():
             logging.info("Running new container")
             container = docker_manager.run_container()
             logging.info(container)
-            # Set timing to 12 minutes if idle GPUs are detected
             time_to_sleep = scan_interval
         else:
-            # Set timing to 30 seconds if no idle GPUs are detected
+
             time_to_sleep = short_interval
         
         logging.info(f"Sleeping for {time_to_sleep} seconds")
@@ -50,20 +48,18 @@ def check_multiple_processes():
         multiple_processes_list = gpu_manager.get_gpus_with_multiple_processes(ip_address, "unix", "password")
         logging.info(f"Multiple process GPUs: {multiple_processes_list}")
         if len(multiple_processes_list) > 0:
-            running_nicehash_containers = docker_manager.get_nicehash_running_containers()  # All the running containers on NiceHash image only
+            running_nicehash_containers = docker_manager.get_nicehash_running_containers()  
             docker_manager.stop_container(running_nicehash_containers)
             docker_manager.remove_container(running_nicehash_containers)
         logging.info(f"Sleeping for {multiple_process_check_interval} seconds")
         time.sleep(multiple_process_check_interval)
 
 if __name__ == "__main__":
-    # Create and start threads for both functions
     scan_thread = threading.Thread(target=scan)
     check_thread = threading.Thread(target=check_multiple_processes)
     
     scan_thread.start()
     check_thread.start()
     
-    # Ensure the main program waits for both threads to complete
     scan_thread.join()
     check_thread.join()

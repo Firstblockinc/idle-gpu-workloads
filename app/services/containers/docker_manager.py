@@ -55,7 +55,7 @@ class DockerManager:
     def get_nicehash_running_containers(self, image="dockerhubnh/nicehash:latest"):
         try:
             containers = self.client.containers.list()
-            # Filter containers by the specified image tag
+
             containers = [container for container in containers if any(tag == image for tag in container.image.tags)]
             container_ids = [container.id for container in containers]
             return container_ids
